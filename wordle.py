@@ -25,24 +25,19 @@ def compare_words(word, secret):
     """
     same_position = []
     same_letter = []
-
     striped_word = []
     striped_secret = []
 
     for i in range(0, len(word)):
       striped_word.append(word[i])
-    print(striped_word)
-    
-    for j in range(0, len(secret) -1):
-      striped_secret.append(secret[j])
-    print(striped_secret)
-
-    for i in word:
-      for j in secret:
-        if word[i] == secret[i]:
+      for j in range(0, len(secret) -1):
+        striped_secret.append(secret[j])
+        # Se comprueba si las letras de la palabra coinciden con la de secret (misma posicion)
+        if striped_word[i].lower() == striped_secret[i].lower():
           same_position.append(i)
 
-        elif word[i] == secret[j]:
+        # Se comprueba si las letras de la palabra coinciden con la de secret (distinta posicion)
+        elif striped_word[i].lower() == striped_secret[j].lower():
           same_letter.append(i)
     
     return same_position, same_letter
@@ -58,12 +53,17 @@ def print_word(word, same_letter_position, same_letter):
       transformed: La palabra aplicando las transformaciones. En el caso anterior: "Cam--"
     """
     transformed = ["-", "-", "-", "-", "-"]
-  
+
+    # Comprueba si hay letras que coinciden en posicion
     if len(same_letter_position) > 0:
       for i in same_letter_position:
+        # Sustituye en la lista transformed el guion por la letra en mayuscula
         transformed[i] = word[i].upper()
+
+    # Comprueba si hay letras iguales
     if len(same_letter) > 0:
       for j in same_letter:
+        # Susituye en la lista transformed el guion por la letra en minuscula
         transformed[j] = word[j].lower()
 
     return transformed 
@@ -76,15 +76,32 @@ def choose_secret_advanced():
       selected: Lista de 15 palabras aleatorias no repetidas que tienen 5 letras y no tienen acentos
       secret: Palabra elegida aleatoriamente de la lista de 15 seleccionadas transformada a mayúsculas
     """
+
+    words = []
+    with open(r'C:\Users\Usuario\Desktop\SEMESTRE 3B\PROYECTO\PYTHON\Examen\ExamenPython2022\palabras_extended.txt', 'r', encoding='utf-8') as f:
+      for line in f:
+        # Se eligen solo si son palabras de 5 letras
+        if len(line) == 5:
+          words.append(line)
+    # Se eligen 15 palabras aleatorias
+    secrets = random.choices(words, weights=None, cum_weights=None, k=15)
+    # Se elige solo una palabra aleatoria
+    secret = random.choice(secrets).upper()
+    return secrets, secret
  
-def check_valid_word():
+def check_valid_word(selected):
     """Dada una lista de palabras, esta función pregunta al usuario que introduzca una palabra hasta que introduzca una que esté en la lista. Esta palabra es la que devolverá la función.
     Args:
       selected: Lista de palabras.
     Returns:
       word: Palabra introducida por el usuario que está en la lista.
     """
+    while(True):
+      word = input("Introduce una nueva palabra para compribar que esta en la listaa: ")
+      if word in selected:
+        return word
 
+        
 if __name__ == "__main__":
     secret=choose_secret()
     print("Palabra a adivinar: "+secret)#Debug: esto es para que sepas la palabra que debes adivinar
