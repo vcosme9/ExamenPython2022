@@ -1,15 +1,16 @@
 import random
 
-def choose_secret(filename):
+def choose_secret():
     """Dado un nombre de fichero, esta función devuelve una palabra aleatoria de este fichero transformada a mayúsculas.
     Args:
       filename: El nombre del fichero. Ej. "palabras_reduced.txt"
     Returns:
       secret: Palabra elegida aleatoriamente del fichero transformada a mayúsculas. Ej. "CREMA"
     """
-    with open(r'C:\Users\Usuario\Desktop\SEMESTRE 3B\PROYECTO\PYTHON\Examen\ExamenPython2022\{filename}' , 'r') as f:
-        wordssl = [line.strip() for line in f]
-    words = wordssl
+    words = []
+    with open(r'C:\Users\Usuario\Desktop\SEMESTRE 3B\PROYECTO\PYTHON\Examen\ExamenPython2022\palabras_reduced.txt', 'r') as f:
+      for line in f:
+        words.append(line)
     secret = random.choice(words).upper()
     return secret
     
@@ -25,10 +26,22 @@ def compare_words(word, secret):
     same_position = []
     same_letter = []
 
+    striped_word = []
+    striped_secret = []
+
+    for i in range(0, len(word)):
+      striped_word.append(word[i])
+    print(striped_word)
+    
+    for j in range(0, len(secret) -1):
+      striped_secret.append(secret[j])
+    print(striped_secret)
+
     for i in word:
       for j in secret:
         if word[i] == secret[i]:
           same_position.append(i)
+
         elif word[i] == secret[j]:
           same_letter.append(i)
     
@@ -44,14 +57,14 @@ def print_word(word, same_letter_position, same_letter):
     Returns:
       transformed: La palabra aplicando las transformaciones. En el caso anterior: "Cam--"
     """
-    transformed = []
+    transformed = ["-", "-", "-", "-", "-"]
   
     if len(same_letter_position) > 0:
       for i in same_letter_position:
-        transformed.append(word[i])
+        transformed[i] = word[i].upper()
     if len(same_letter) > 0:
       for j in same_letter:
-       transformed.append(word[j])
+        transformed[j] = word[j].lower()
 
     return transformed 
 
@@ -73,13 +86,12 @@ def check_valid_word():
     """
 
 if __name__ == "__main__":
-    print(print_word('CAMPO', [0], [1,2])) 
     secret=choose_secret()
     print("Palabra a adivinar: "+secret)#Debug: esto es para que sepas la palabra que debes adivinar
     for repeticiones in range(0,6):
         word = input("Introduce una nueva palabra: ")
-        same_position, same_letter = compare_words()
-        resultado=print_word()
+        same_position, same_letter = compare_words(word, secret)
+        resultado=print_word(word, same_position, same_letter)
         print(resultado)
         if word == secret:
             print("HAS GANADO!!")
